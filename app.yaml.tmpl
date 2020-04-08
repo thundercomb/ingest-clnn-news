@@ -3,7 +3,7 @@ service: ingest-clnn-news
 entrypoint: gunicorn -b :8080 -w 2 app.main:app
 env_variables:
     URL: http://climatenewsnetwork.net/feed/
-    PROJECT: $PROJECT_ID                 # replace in cloud build deployment step
+    PROJECT: $ANALYTICS_PROJECT                 # replace in cloud build deployment step
     TOPIC: clnn-news
     SUBSCRIPTION: clnn-news
     DATASET: clnn
