@@ -9,4 +9,41 @@ steps:
      gcloud app deploy
   dir: /workspace
 
+- id: 'Terraform init'
+  name: 'hashicorp/terraform'
+  entrypoint: 'sh'
+  args:
+  - '-c'
+  - |
+     terraform init \
+       -backend-config="bucket=${PROJECT_ID}-terraform-state" \
+       -backend-config="prefix=${REPO_NAME}"
+  dir: /workspace/infra
+
+- id: 'Terraform plan'
+  name: 'hashicorp/terraform'
+  entrypoint: 'sh'
+  args:
+  - '-c'
+  - |
+     terraform plan
+  dir: /workspace/infra
+  env:
+  - "GOOGLE_PROJECT=${PROJECT_ID}"
+  - "TF_VAR_analytics_project=${_ANALYTICS_PROJECT}"
+  - "TF_VAR_region=${_REGION}"
+
+- id: 'Terraform apply'
+  name: 'hashicorp/terraform'
+  entrypoint: 'sh'
+  args:
+  - '-c'
+  - |
+     terraform apply -auto-approve
+  dir: /workspace/infra
+  env:
+  - "GOOGLE_PROJECT=${PROJECT_ID}"
+  - "TF_VAR_analytics_project=${_ANALYTICS_PROJECT}"
+  - "TF_VAR_region=${_REGION}"
+
 timeout: "1600s"
